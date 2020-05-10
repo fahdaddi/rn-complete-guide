@@ -16,6 +16,18 @@ export default function App() {
     }
   };
 
+  const deleteGoal = (item) => {
+    let index = goals.indexOf(item);
+    arr = []
+    for (let i = 0; i < goals.length; i++) {
+      const goal = goals[i];
+      if(goal != item){
+        arr.push(goal);
+      }
+    }
+    setGoals(arr);
+  };
+
   return (
     <View style={styles.screen}>
       <View style={styles.inputContainer}>
@@ -29,7 +41,10 @@ export default function App() {
       </View>
       <View>
         {goals.map((goal) => (
-          <Text key={goal} >{goal}</Text>
+          <View style={styles.listItem} key={goal}>
+            <Text style={styles.text} >{goal}</Text>
+            <Text onPress={() => deleteGoal(goal)} style={styles.delete}>X</Text>
+          </View>
         ))}
       </View>
     </View>
@@ -45,6 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "baseline",
+    marginBottom: 20
   },
   inputText: {
     flex: 1,
@@ -52,4 +68,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     marginRight: 10,
   },
+  listItem: {
+    backgroundColor: '#2a2a2a',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#1a1a1a',
+    flexDirection: 'row'
+  },
+  text: {
+    color: 'white',
+    flex: 1
+  },
+  delete: {
+    color: 'red',
+    paddingHorizontal: 10,
+  }
 });
