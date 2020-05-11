@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  ScrollView,
+  FlatList,
+} from "react-native";
 
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState("");
@@ -11,17 +19,17 @@ export default function App() {
 
   const addGoal = () => {
     if (!!enteredGoal.length) {
-      setGoals((currentGoals) => [...currentGoals, enteredGoal]);
+      setGoals((currentGoals) => [...currentGoals, { key: Math.random().toString(), value: enteredGoal}]);
       setEnteredGoal("");
     }
   };
 
   const deleteGoal = (item) => {
     let index = goals.indexOf(item);
-    arr = []
+    arr = [];
     for (let i = 0; i < goals.length; i++) {
       const goal = goals[i];
-      if(goal != item){
+      if (goal != item) {
         arr.push(goal);
       }
     }
@@ -39,14 +47,28 @@ export default function App() {
         />
         <Button title="Add" onPress={addGoal} />
       </View>
-      <ScrollView >
+      <FlatList
+        data={goals}
+        renderItem={(itemData) => (
+          <View style={styles.listItem}>
+            <Text style={styles.text}>{itemData.item.value}</Text>
+            <Text
+              onPress={() => deleteGoal(itemData.item.value)}
+              style={styles.delete}
+            >
+              X
+            </Text>
+          </View>
+        )}
+      />
+      {/* <ScrollView >
         {goals.map((goal) => (
           <View style={styles.listItem} key={goal}>
             <Text style={styles.text} >{goal}</Text>
             <Text onPress={() => deleteGoal(goal)} style={styles.delete}>X</Text>
           </View>
         ))}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 }
@@ -60,7 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "baseline",
-    marginBottom: 20
+    marginBottom: 20,
   },
   inputText: {
     flex: 1,
@@ -69,20 +91,20 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   listItem: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: "#2a2a2a",
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#1a1a1a',
-    flexDirection: 'row'
+    borderColor: "#1a1a1a",
+    flexDirection: "row",
   },
   text: {
-    color: 'white',
-    flex: 1
+    color: "white",
+    flex: 1,
   },
   delete: {
-    color: 'red',
+    color: "red",
     paddingHorizontal: 10,
-  }
+  },
 });
