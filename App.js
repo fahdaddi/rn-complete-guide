@@ -3,6 +3,8 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 
 import GoalItem from "./components/goalItem";
@@ -10,6 +12,7 @@ import AddItem from "./components/addItem";
 
 export default function App() {
   const [goals, setGoals] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const addGoal = (enteredGoal) => {
     if (!!enteredGoal.length) {
@@ -17,29 +20,30 @@ export default function App() {
         ...currentGoals,
         { id: Math.random().toString(), value: enteredGoal },
       ]);
+      toggleModal();
     }
   };
 
   const deleteGoal = (item) => {
-    // let index = goals.indexOf(item);
-    // arr = [];
-    // for (let i = 0; i < goals.length; i++) {
-    //   const goal = goals[i];
-    //   if (goal.value != item) {
-    //     arr.push(goal);
-    //   }
-    // }
-    setGoals(currentGoals => {
-      return currentGoals.filter(obj => obj.id != item)
+    setGoals((currentGoals) => {
+      return currentGoals.filter((obj) => obj.id != item);
     });
+  };
+
+  const toggleModal = () => {
+    setShowModal((currentState) => !currentState);
   };
 
   return (
     <View style={styles.screen}>
-      <AddItem onAddGoal={addGoal} />
+      <AddItem onAddGoal={addGoal} visible={showModal} close={toggleModal}/>
+      <TouchableOpacity style={styles.button} onPress={toggleModal}>
+        <Text style={styles.buttonText}>Add</Text>
+      </TouchableOpacity>
+      {/* <Button style={styles.addButton} title="Add new goal!" onPress={toggleModal} /> */}
       <FlatList
         data={goals}
-        keyExtractor={goals, (goal)=> goal.id}
+        keyExtractor={(goals, (goal) => goal.id)}
         renderItem={(itemData) => (
           <GoalItem item={itemData.item} onDelete={deleteGoal} />
         )}
@@ -52,5 +56,17 @@ const styles = StyleSheet.create({
   screen: {
     paddingTop: 40,
     paddingHorizontal: 10,
+  },
+  button: {
+    width: "90%",
+    backgroundColor: "#028cfe",
+    borderRadius: 10,
+    alignItems: "center",
+    padding: 10,
+    alignSelf: 'center',
+    marginBottom: 20
+  },
+  buttonText: {
+    color: "white",
   },
 });
